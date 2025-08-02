@@ -1,15 +1,16 @@
 [project]
 authors = [
-    {name = "YOUR NAME", email = "email@example.com"},
+    {name = "Kevin Stokes", email = "kev365@gmail.com"},
 ]
 requires-python = "<4.0,>=3.11"
 dependencies = [
     "celery[redis]<6.0.0,>=5.4.0",
     "openrelik-worker-common<1.0.0,>=0.16.0",
+    "libesedb-python",
 ]
-name = "openrelik-worker-TEMPLATE-WORKER-NAME"
+name = "openrelik-worker-ksrike"
 version = "0.1.0"
-description = "Description of the worker"
+description = "A stand-alone parser for User Access Logging from Server 2012 and newer systems."
 readme = "README.md"
 
 [dependency-groups]
