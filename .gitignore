@@ -1,0 +1,41 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+.pytest_cache/
+htmlcov/
+coverage.xml
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# IDE / editor settings
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
+
+# Dev Containers
+.devcontainer/
+
+# mypy / type checkers
+.mypy_cache/
+
+# Local dev artifacts
+temp_output*/
+test_output*.txt
+*.code-workspace
