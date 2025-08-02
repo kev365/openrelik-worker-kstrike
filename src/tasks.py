@@ -9,12 +9,12 @@ from .app import celery
 from celery import signals
 
 # Task name used to register and route the task to the correct queue.
-TASK_NAME = "openrelik-worker-TEMPLATEWORKERNAME.tasks.your_task_name"
+TASK_NAME = "openrelik-worker-kstrike.tasks.your_task_name"
 
 # Task metadata for registration in the core system.
 TASK_METADATA = {
-    "display_name": "openrelik-worker-TEMPLATEWORKERNAME",
-    "description": "TEMPLATEDESC",
+    "display_name": "openrelik-worker-kstrike",
+    "description": "Worker for OpenRelik to add User Access Log parsing with Brian Moran's KStrike tool.",
     # Configuration that will be rendered as a web for in the UI, and any data entered
     # by the user will be available to the task function when executing (task_config).
     "task_config": [
