@@ -222,7 +222,7 @@ class TestCombineOnly:
 
         result = self._run(
             [{"display_name": "big.txt", "path": str(big_txt)}],
-            task_config={"Max rows per file": "2"},
+            task_config={"Output split enabled": "2"},
         )
         assert isinstance(result, str)
 
@@ -243,7 +243,7 @@ class TestCombineOnly:
 
         self._run(
             [{"display_name": "many.txt", "path": str(txt)}],
-            task_config={"Max rows per file": "0"},
+            task_config={"Output split enabled": "0"},
         )
         output_files = list(self.output_dir.glob("*.txt"))
         assert len(output_files) == 1
