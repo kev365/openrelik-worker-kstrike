@@ -318,17 +318,11 @@ def command(
             parsed_file_names.append(file_display)
 
             if not combine:
-                output_file = create_output_file(
-                    output_path or "",
-                    display_name=out_name,
-                    extension="txt",
-                    data_type="openrelik:worker:kstrike:ual_log",
-                    original_path=input_file.get("original_path"),
-                    source_file_id=input_file.get("id"),
+                header, rows, _ = _combine_and_dedupe([result])
+                split_files = _write_combined_files(
+                    header or "", rows, output_path or "", out_name, max_rows,
                 )
-                with open(output_file.path, "w", encoding="utf-8") as fh:
-                    fh.write(result)
-                output_files.append(output_file.to_dict())
+                output_files.extend(split_files)
 
     # --- Phase 2: Read .txt files for combining ---
     if has_txt and (combine or combine_only):

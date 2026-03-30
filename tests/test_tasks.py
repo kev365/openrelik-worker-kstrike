@@ -142,10 +142,32 @@ class TestCommandParsing:
             task_config={
                 "File prefix": None,
                 "Combine & dedup": None,
-                "Max rows per file": None,
+                "Output split enabled": None,
             },
         )
         assert isinstance(result, str)
+
+    def test_per_file_split(self, monkeypatch):
+        """Splitting should work on individual file output, not just combined."""
+        header = (
+            "RoleGuid (RoleName)||TenantId||TotalAccesses||InsertDate||LastAccess"
+            "||RawAddress||ConvertedAddress||AuthenticatedUserName||DatesAndAccesses||\r\n"
+        )
+        rows = "".join(f"row_{i}||tenant||1||2021-01-01||2021-01-01||addr||addr||user||dates||\r\n" for i in range(5))
+
+        monkeypatch.setattr(tasks, "parse_mdb", lambda path: header + rows)
+
+        result = self._run(
+            [{"display_name": "Current.mdb", "path": self.sample_mdb}],
+            task_config={"Output split enabled": "2"},
+        )
+        assert isinstance(result, str)
+
+        output_files = list(self.output_dir.glob("*.txt"))
+        assert len(output_files) == 3  # 5 rows / 2 per file = 3 files
+        for f in output_files:
+            content = f.read_text()
+            assert content.startswith("RoleGuid (RoleName)||")
 
 
 class TestCombineOnly:
