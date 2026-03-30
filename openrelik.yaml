@@ -2,7 +2,7 @@
 publish: true
 
 # Worker Metadata. This section is required.
-display_name: openrelik-worker-kstrike
+display_name: KStrike
 description: Worker for OpenRelik to add User Access Log parsing with Brian Moran's KStrike tool.
 
 # Optional: Third-Party Tools Used by the Worker.

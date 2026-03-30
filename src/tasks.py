@@ -257,7 +257,7 @@ def command(
     task_config = task_config or {}
     output_prefix = _safe_str_config(task_config, "File prefix")
     combine = bool(task_config.get("Combine & dedup", False))
-    max_rows = _safe_int_config(task_config, "Max rows per file", DEFAULT_MAX_ROWS_PER_FILE)
+    max_rows = _safe_int_config(task_config, "Output split enabled", DEFAULT_MAX_ROWS_PER_FILE)
 
     # Separate inputs by type: disk images, loose files.
     all_input_files = get_input_files(pipe_result or "", input_files or [])
