@@ -1,37 +1,74 @@
-# OpenRelik Worker - KStrike
+# OpenRelik Worker - KStrike & UAL Timeliner
 
-A worker for [OpenRelik](https://openrelik.org/) that parses User Access Logging (UAL) from Windows Server 2012 and newer systems using [KStrike](https://github.com/brimorlabs/KStrike) by Brian Moran. Features correlation of IP addresses to hostnames when the DNS table is present.
+A worker for [OpenRelik](https://openrelik.org/) that provides two tasks for parsing Windows Server User Access Logging (UAL) from Server 2012 and newer systems:
 
-## Features
+- **KStrike UAL Parser** — Parses individual `.mdb` files using [KStrike](https://github.com/brimorlabs/KStrike) by Brian Moran. Features IP-to-hostname correlation when the DNS table is present.
+- **UAL Timeliner** — Builds forensic timelines from one or more `.mdb` files using [UAL Timeliner](https://github.com/kev365/ual-timeliner) by Kevin Stokes. Extracts events from CLIENTS, DNS, and ROLE_ACCESS tables into a sorted, deduplicated timeline with multiple output format support.
 
-- **Auto-filters `.mdb` files** from input — no manual file selection needed
-- **Disk image support** — automatically searches known UAL paths inside mounted images
-- **Combine & deduplicate** — merge all parsed output into a single file with duplicate rows removed
-- **Row-based output splitting** — configurable max rows per file (default 500,000) when combining
-- **Combine-only mode** — accepts previously parsed KStrike `.txt` files to combine without re-parsing
-- **Output prefix** — optionally prefix output filenames for organization
+## KStrike UAL Parser
 
-## Worker Configuration
+Parses `.mdb` files individually into double-pipe `||` delimited text output.
+
+### Features
+
+- Auto-filters `.mdb` files from input
+- Disk image support — searches known UAL paths inside mounted images
+- Combine & deduplicate — merge all parsed output into a single file with duplicate rows removed
+- Row-based output splitting — configurable max rows per file (default 500,000) when combining
+- Combine-only mode — accepts previously parsed KStrike `.txt` files to combine without re-parsing
+- Output prefix — optionally prefix output filenames
+
+### Configuration
 
 | Option | Type | Description |
 |--------|------|-------------|
-| File prefix | Text | Optional prefix for output filenames (e.g., `mycase` produces `mycase_filename.txt`) |
-| Combine & dedup | Checkbox | Merge all output into one deduplicated file. Also enables combine-only mode for `.txt` input. |
+| File prefix | Text | Optional prefix for output filenames |
+| Combine & dedup | Checkbox | Merge all output into one deduplicated file |
 | Max rows per file | Text | Row limit per output file when combining (default: 500000, 0 = no limit) |
 
-Output files are double-pipe `||` delimited, UTF-8 encoded text.
+## UAL Timeliner
+
+Groups all input `.mdb` files together and builds a unified chronological timeline. Extracts `InsertDate`, `LastAccess`, `FirstSeen`, `LastSeen`, and optionally `Day###` historical access data. Automatically skips `SystemIdentity.mdb` and handles ESE databases in dirty shutdown state.
+
+### Capabilities
+
+- Groups all `.mdb` files into a single timeline run
+- Disk image support — searches known UAL paths inside mounted images
+- Multiple output formats — CSV, XLSX, SQLite, Parquet, and K2T (Timesketch JSONL)
+- Multi-format output — select multiple formats in a single run
+- Deduplication — removes duplicate entries preferring `Current.mdb` over archive databases
+- Full output mode — includes extra columns and Day### daily access history
+- Row-based file splitting — for CSV, K2T, and XLSX formats (default 500,000 rows)
+- Role GUID resolution — maps 21 known Windows Server role GUIDs to human-readable names
+
+### Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| File prefix | Text | Optional prefix for output filenames |
+| Output format | Multi-select | One or more formats: csv, xlsx, sqlite, parquet, k2t (default: csv) |
+| Full output | Checkbox | Include all columns and parse Day### historical data |
+| Deduplication | Select | Enable/disable dedup (default: true) |
+| Max rows per file | Text | Row limit per output file for CSV, K2T, XLSX (default: 500000, 0 = no limit) |
 
 ## Project Structure
 
 ```text
 src/
   app.py              # Celery app initialization
-  tasks.py            # Worker task definition
-  kstrike.py          # KStrike UAL parser (from brimorlabs/KStrike, wrapped for import)
+  tasks.py            # Worker task definitions (KStrike + UAL Timeliner)
+  kstrike.py          # KStrike UAL parser (from brimorlabs/KStrike)
+  ual_timeliner.py    # UAL Timeliner (from kev365/ual-timeliner)
 tests/
-  test_tasks.py       # Unit tests
+  test_tasks.py       # Unit tests (27 tests)
   Sample_UAL/         # Sample MDB file for testing
 ```
+
+## Licenses
+
+- **This worker**: Apache License 2.0 ([LICENSE](LICENSE))
+- **KStrike**: BSD-like with acknowledgment clause / GPL v3 dual license ([LICENSE-KSTRIKE](LICENSE-KSTRIKE))
+- **UAL Timeliner**: MIT License ([LICENSE-UAL-TIMELINER](LICENSE-UAL-TIMELINER))
 
 ## Run Tests
 
