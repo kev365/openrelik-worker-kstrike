@@ -39,4 +39,4 @@ RUN uv sync --locked --no-dev
 ENV PATH="/openrelik/.venv/bin:$PATH"
 
 # Default command if not run from docker-compose (and command being overidden)
-CMD ["celery", "--app=src.app", "worker", "--task-events", "--concurrency=1", "--loglevel=DEBUG", "-Q", "openrelik-worker-kstrike"]
+CMD ["celery", "--app=src.app", "worker", "--task-events", "--concurrency=1", "--loglevel=INFO", "-Q", "openrelik-worker-kstrike"]

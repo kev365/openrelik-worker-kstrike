@@ -2,11 +2,14 @@
 publish: true
 
 # Worker Metadata. This section is required.
-display_name: KStrike
-description: Worker for OpenRelik to add User Access Log parsing with Brian Moran's KStrike tool.
+display_name: KStrike & UAL Timeliner
+description: Worker for OpenRelik providing UAL parsing with KStrike and forensic timeline generation with UAL Timeliner.
 
 # Optional: Third-Party Tools Used by the Worker.
 tools:
   - display_name: KStrike
     description: Stand-alone parser for User Access Logging from Server 2012 and newer systems
-    url: https://github.com/brimorlabs/KStrike # URL for more info about the tool
+    url: https://github.com/brimorlabs/KStrike
+  - display_name: UAL Timeliner
+    description: Forensic timeline generator for Windows User Access Logging databases
+    url: https://github.com/kev365/ual-timeliner

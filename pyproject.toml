@@ -7,10 +7,12 @@ dependencies = [
     "celery[redis]<6.0.0,>=5.4.0",
     "openrelik-worker-common<1.0.0,>=0.16.0",
     "libesedb-python",
+    "polars>=1.0.0",
+    "openpyxl>=3.0.0",
 ]
 name = "openrelik-worker-kstrike"
-version = "0.1.0"
-description = "A stand-alone parser for User Access Logging from Server 2012 and newer systems."
+version = "0.2.0"
+description = "UAL parsing with KStrike and forensic timeline generation with UAL Timeliner for Windows Server User Access Logging."
 readme = "README.md"
 
 [dependency-groups]
